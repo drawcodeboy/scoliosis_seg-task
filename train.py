@@ -67,7 +67,7 @@ def main(args):
     val_dl = DataLoader(val_ds, batch_size=args.batch_size)
     
     # Model
-    model = SegFormer(num_classes=args.num_classes, phi=args.scale.lower())
+    model = SegFormer(num_classes=args.num_classes, phi=args.scale.lower()).to(device)
     
     # Loss function
     loss_fn = get_loss_fn(imbalance=args.unified_loss_fn)

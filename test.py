@@ -59,7 +59,7 @@ def main(args):
     test_dl = DataLoader(test_ds, batch_size=args.batch_size)
     
     # Model
-    model = SegFormer(num_classes=args.num_classes, phi=args.scale.lower())
+    model = SegFormer(num_classes=args.num_classes, phi=args.scale.lower()).to(device)
     ckpt = torch.load(os.path.join(args.load_weights_dir, args.load_weights), map_location=device)
     model.load_state_dict(ckpt['model'])
     print(f"It was trained {ckpt['epochs']} EPOCHS")

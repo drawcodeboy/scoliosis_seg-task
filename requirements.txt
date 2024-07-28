@@ -4,3 +4,4 @@ timm==0.3.2
 # mmcv-full==1.2.7 # mmcv 버림
 opencv-python==4.5.1.48 # mmcv 다운받으면서 이미 require로 설치되었음
 einops==0.8.0
+monai==1.3.2

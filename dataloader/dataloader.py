@@ -91,6 +91,7 @@ class ScoliosisDataset(Dataset):
         file_cnt = 0
         
         for i, filename in enumerate(os.listdir(images_path)):
+            if i == 2: break # 지우기
             image_path = os.path.join(images_path, filename)
             label_path = os.path.join(labels_path, f"{filename[:-4]}.txt")
             

@@ -8,7 +8,8 @@
 **/__pycache__/**
 
 # data
-data/
+data/*
+!data/temp.txt
 
 # saved
 saved/losses/train/*

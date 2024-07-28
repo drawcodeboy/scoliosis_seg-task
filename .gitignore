@@ -6,3 +6,16 @@
 
 # pycache
 **/__pycache__/**
+
+# data
+data/
+
+# saved
+saved/losses/train/*
+!saved/losses/train/temp.txt
+
+saved/losses/val/*
+!saved/losses/val/*
+
+saved/weights/*
+!saved/weights/temp.txt

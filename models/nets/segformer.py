@@ -57,6 +57,7 @@ class SegFormerHead(nn.Module):
 
         self.linear_pred    = nn.Conv2d(embedding_dim, num_classes, kernel_size=1)
         self.dropout        = nn.Dropout2d(dropout_ratio)
+        self.acti           = nn.Sigmoid()
     
     def forward(self, inputs):
         c1, c2, c3, c4 = inputs
@@ -106,4 +107,6 @@ class SegFormer(nn.Module):
         x = self.decode_head.forward(x)
         
         x = F.interpolate(x, size=(H, W), mode='bilinear', align_corners=True)
+        
+        x = self.acti(x)
         return x

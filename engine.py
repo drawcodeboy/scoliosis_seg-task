@@ -20,13 +20,11 @@ def train_one_epoch(epoch, model, dataloader, optimizer, scheduler, loss_fn, dev
         total_loss += loss
         print(f"\rTraining: {100*batch_idx/len(dataloader):.2f}%, Loss: {loss.item():.6f}, LR: {scheduler.get_last_lr()[0]:.8f}", end="")
     print()
-    
-    scheduler.step(loss)
-    
+        
     return (total_loss/len(dataloader)).detach().cpu().numpy() # One Epoch Mean Loss
 
 @torch.no_grad()
-def evaluate(epoch, model, dataloader, loss_fn, device):
+def evaluate(epoch, model, dataloader, loss_fn, scheduler, device):
     model.eval()
     
     metrics_li = ['IoU', 'Dice', 'Precision', 'Recall']
@@ -58,5 +56,7 @@ def evaluate(epoch, model, dataloader, loss_fn, device):
         print(f"{key}: {metrics[key]:.4f}", end=" | ")
         
     mean_loss = (total_loss/len(dataloader)).detach().cpu().numpy()
+    scheduler.step(mean_loss)
+    
     print(f"loss: {mean_loss:.6f}")
     return mean_loss

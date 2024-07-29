@@ -104,7 +104,7 @@ def main(args):
         
         # and Validation
         start_time = int(time.time())
-        val_loss = evaluate(current_epoch, model, val_dl, loss_fn, device)
+        val_loss = evaluate(current_epoch, model, val_dl, loss_fn, scheduler, device)
         val_time = int(time.time() - start_time)
         print(f"Validation Time: {val_time//60:02d}m {val_time%60:02d}s")
         

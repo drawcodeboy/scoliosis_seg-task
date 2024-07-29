@@ -16,7 +16,7 @@ saved/losses/train/*
 !saved/losses/train/temp.txt
 
 saved/losses/val/*
-!saved/losses/val/*
+!saved/losses/val/temp.txt
 
 saved/weights/*
 !saved/weights/temp.txt

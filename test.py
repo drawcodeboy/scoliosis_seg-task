@@ -69,7 +69,7 @@ def main(args):
     
     # Evaluate
     start_time = int(time.time())
-    test_loss = evaluate(None, model, test_dl, loss_fn, device)
+    test_loss = evaluate(None, model, test_dl, loss_fn, None, device)
     test_time = int(time.time() - start_time)
     print(f"Test Time: {test_time//60:02d}m {test_time%60:02d}s")
     

@@ -12,13 +12,14 @@ def get_args_parser():
     
     parser.add_argument('--device', default='cuda')
     
-    parser.add_argument('--image_path')
-    
     parser.add_argument('--num-classes', type=int, default=1)
     parser.add_argument('--scale', default='B3')
     
     parser.add_argument("--load_weights_dir", default="saved/weights")
     parser.add_argument("--load-weights", default="SegFormer-B3-061-dice_loss.pth")
+    
+    parser.add_argument("--save_path")
+    
     return parser
 
 def encode_image(image_path):

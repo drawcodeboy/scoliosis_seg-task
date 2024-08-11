@@ -1,3 +1,11 @@
 
 # inference
-python inference.py --image_path="E:\Scoliosis-Segmentation\U-Net\data\AIS.v1i.yolov8\test\images\1_bmp.rf.01f8cf4d01f022e9149ebf66d6b07ebc.jpg" --load-weights="SegFormer-B2-079-dice_loss.pth"
+python inference.py --image-path="E:\Scoliosis-Segmentation\U-Net\data\AIS.v1i.yolov8\test\images\1_bmp.rf.01f8cf4d01f022e9149ebf66d6b07ebc.jpg" --load-weights="SegFormer-B2-079-dice_loss.pth"
+
+# inference each image no save
+python inference.py --image-path="E:\Scoliosis-Segmentation\SegFormer\data\AIS.v1i.yolov8\test\images\1_bmp.rf.01f8cf4d01f022e9149ebf66d6b07ebc.jpg"
+
+python inference.py --vis-method=2 --image-path="E:\Scoliosis-Segmentation\SegFormer\data\AIS.v1i.yolov8\test\images\1_bmp.rf.01f8cf4d01f022e9149ebf66d6b07ebc.jpg"
+python inference.py --vis-method=2 --image-path="E:\Scoliosis-Segmentation\SegFormer\data\AIS.v1i.yolov8\test\images\45_bmp.rf.cb7e1dc6a36089d7d84e71cb1641d7dd.jpg"
+python inference.py --vis-method=2 --image-path="E:\Scoliosis-Segmentation\SegFormer\data\AIS.v1i.yolov8\test\images\1113_bmp.rf.b1afbe480ae9b7ef1c8b93263974e2b0.jpg"
+python inference.py --vis-method=2 --image-path="E:\Scoliosis-Segmentation\SegFormer\data\AIS.v1i.yolov8\test\images\1094_bmp.rf.3701d6f19cbf950811dd8e2ad8646d39.jpg"

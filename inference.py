@@ -4,6 +4,7 @@ import cv2
 import argparse
 import torch
 import numpy as np
+from skimage.morphology import skeletonize
 
 from models.nets import SegFormer
 
@@ -18,7 +19,11 @@ def get_args_parser():
     parser.add_argument("--load_weights_dir", default="saved/weights")
     parser.add_argument("--load-weights", default="SegFormer-B3-061-dice_loss.pth")
     
-    parser.add_argument("--save_path")
+    # Method
+    parser.add_argument("--save", action='store_true')
+    parser.add_argument("--save-path")
+    parser.add_argument("--image-path")
+    parser.add_argument("--vis-method", type=int, default=1)
     
     return parser
 
@@ -46,6 +51,43 @@ def get_all_images_path():
             all_paths.append(os.path.join(parent_dir, path))
     
     return all_paths
+
+def get_only_mask(image, mask_pred):
+    only_mask = image.copy()
+    
+    # only_mask = np.zeros_like(image)
+    # only_mask[mask_pred == 1.] = 1.
+    
+    only_mask[mask_pred == 0] = 0
+    
+    only_mask = (only_mask * 255.0).astype(np.uint8)
+    
+    
+    skel = skeletonize(only_mask)
+    print(skel)
+    print(type(skel), skel.dtype)
+    print(skel.shape)
+    only_mask[skel==True] = 255.0
+    
+    
+    return only_mask
+    
+    gray = cv2.cvtColor(only_mask, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, 0, 100)
+    
+    lines = cv2.HoughLines(edges, 1, np.pi/180, 80)
+    
+    '''
+    for line in lines:
+        rho, theta = line[0]
+        cos, sin = np.cos(theta), np.sin(theta)
+        cx, cy = rho * cos, rho * sin
+        x1, y1 = int(cx + 1000*(-sin)), int(cy + 1000*cos)
+        x2, y2 = int(cx + 1000*sin), int(cy + 1000*(-cos))
+        cv2.line(only_mask, (x1, y1), (x2, y2), (0, 255, 0), 1)
+    return only_mask
+    '''
+    return edges
     
 def main(args):
     if args.device == 'cuda' and torch.cuda.is_available():
@@ -58,7 +100,12 @@ def main(args):
     ckpt = torch.load(os.path.join(args.load_weights_dir, args.load_weights), map_location=device, weights_only=False)
     model.load_state_dict(ckpt['model'])
     
+    print(f"Load Model Complete")
+    
     images_path = get_all_images_path()
+    
+    if args.image_path:
+        images_path = [args.image_path]
     
     for idx, image_path in enumerate(images_path):
         
@@ -82,6 +129,8 @@ def main(args):
         # 가중치 합성
         blended = cv2.addWeighted(colored_image, alpha, image, 1-alpha, gamma)
         
+        # only mask with lines
+        only_mask = get_only_mask(image, mask_pred)
         
         image_num = image_path.split('\\')[-1].split('_')[0]
         
@@ -91,7 +140,15 @@ def main(args):
             save_path = args.save_path
             
         blended = (blended * 255.).astype(np.uint8)
-        cv2.imwrite(save_path, blended)
+        if args.save:
+            cv2.imwrite(save_path, blended)
+            # cv2.imwrite(save_path, only_mask)
+        else:
+            if args.vis_method == 1:
+                cv2.imshow('Mask on Image', blended)
+            elif args.vis_method == 2:
+                cv2.imshow('Only Mask', only_mask)
+            
         print(f'pass {image_num}')
         
     cv2.waitKeyEx()

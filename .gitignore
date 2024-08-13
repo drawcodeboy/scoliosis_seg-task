@@ -10,6 +10,7 @@
 # data
 data/*
 !data/temp.txt
+
 real_mask_0001.jpg
 test_mask_0001.jpg
 

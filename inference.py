@@ -3,6 +3,7 @@ import os
 import cv2
 import argparse
 import torch
+from random import shuffle
 import numpy as np
 from skimage.morphology import skeletonize
 
@@ -62,32 +63,7 @@ def get_only_mask(image, mask_pred):
     
     only_mask = (only_mask * 255.0).astype(np.uint8)
     
-    
-    skel = skeletonize(only_mask)
-    print(skel)
-    print(type(skel), skel.dtype)
-    print(skel.shape)
-    only_mask[skel==True] = 255.0
-    
-    
     return only_mask
-    
-    gray = cv2.cvtColor(only_mask, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(gray, 0, 100)
-    
-    lines = cv2.HoughLines(edges, 1, np.pi/180, 80)
-    
-    '''
-    for line in lines:
-        rho, theta = line[0]
-        cos, sin = np.cos(theta), np.sin(theta)
-        cx, cy = rho * cos, rho * sin
-        x1, y1 = int(cx + 1000*(-sin)), int(cy + 1000*cos)
-        x2, y2 = int(cx + 1000*sin), int(cy + 1000*(-cos))
-        cv2.line(only_mask, (x1, y1), (x2, y2), (0, 255, 0), 1)
-    return only_mask
-    '''
-    return edges
     
 def main(args):
     if args.device == 'cuda' and torch.cuda.is_available():
@@ -107,7 +83,12 @@ def main(args):
     if args.image_path:
         images_path = [args.image_path]
     
+    shuffle(images_path)
+    
     for idx, image_path in enumerate(images_path):
+        
+        if idx == 100:
+            break
         
         # Get Image Tensor for Model Input
         orig_image, image = encode_image(image_path)
@@ -134,6 +115,10 @@ def main(args):
         
         image_num = image_path.split('\\')[-1].split('_')[0]
         
+        print(blended.shape, blended.dtype)
+        print(mask_pred.shape, mask_pred.dtype)
+        print(image.shape, image.dtype)
+        
         if args.save_path is None:
             save_path = fr"E:\Scoliosis-Segmentation\Mask_Prediction\SegFormer\segformer_{int(image_num):04d}.jpg"
         else:
@@ -141,13 +126,26 @@ def main(args):
             
         blended = (blended * 255.).astype(np.uint8)
         if args.save:
-            cv2.imwrite(save_path, blended)
-            # cv2.imwrite(save_path, only_mask)
+            if args.vis_method == 1:
+                cv2.imwrite(save_path, blended)
+            elif args.vis_method == 2:
+                orig_save_path = fr"E:\Scoliosis-Segmentation\SegFormer\mask_test\orig_{int(image_num):04d}.jpg"
+                mask_save_path = fr"E:\Scoliosis-Segmentation\SegFormer\mask_test\mask_{int(image_num):04d}.jpg"
+                
+                mask_pred = (mask_pred * 255.).astype(np.uint8)
+                image = (image * 255.).astype(np.uint8)
+                
+                cv2.imwrite(orig_save_path, image)
+                cv2.imwrite(mask_save_path, mask_pred)
         else:
             if args.vis_method == 1:
+                # 원본 이미지에 Masking을 한 이미지
                 cv2.imshow('Mask on Image', blended)
             elif args.vis_method == 2:
-                cv2.imshow('Only Mask', only_mask)
+                # Binary Mask
+                cv2.imshow('Binary Mask', mask_pred)
+                # Original Image
+                cv2.imshow('Original Image', image)
             
         print(f'pass {image_num}')
         

@@ -434,21 +434,15 @@ class CobbAngleDetector():
         
         cobb_angle = math.degrees(theta)
         
-        sign = lambda x: (1 if x >= 0 else -1)
-        w1, w2 = (-max_bias/max_grad), (-min_bias/min_grad)
-        h1, h2 = max_bias, min_bias
+        cross_pt = self.line_intersection(max_line_pt[0],
+                                          max_line_pt[1],
+                                          min_line_pt[0],
+                                          min_line_pt[1])
         
-        if sign(w1) != sign(w2):
-            width = abs(w1) + abs(w2)
-        else:
-            width = abs(abs(w1) - abs(w2))
-            
-        if sign(h1) != sign(h2):
-            height = abs(h1) + abs(h2)
-        else:
-            height = abs(abs(h1) - abs(h2))
-        
-        if width >= height:
+        if (max_grad * min_grad) > -1 and (max_grad * min_grad) < 0:
+            # 두 기울기의 곱이 -1보다 크면 윗 각 부분이 90도를 넘는다는 의미이다.
+            # 다만 이 곱이 양수가 되었다는 것은 두 선이 한 사분면에 있는 것이기 때문에
+            # 무조건 윗 각이 90도보다 작아서 이 점을 유의해야 한다.
             cobb_angle = 180 - cobb_angle
         
         return max_line_pt, min_line_pt, cobb_angle

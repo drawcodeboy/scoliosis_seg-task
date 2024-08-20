@@ -13,9 +13,8 @@ data/*
 
 # data prediction for test
 mask_test/
-
-real_mask_0001.jpg
-test_mask_0001.jpg
+cobb_angle/cobb_test/
+cobb_angle/cobb_test.zip
 
 # saved
 saved/losses/train/*

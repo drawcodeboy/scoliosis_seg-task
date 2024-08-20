@@ -25,7 +25,7 @@ def main(args):
             continue
         
         sample_cnt += 1
-        
+                
         mask_path = 'mask' + orig_path[4:]
         
         orig_path = os.path.join(args.test_dir, orig_path)
@@ -37,7 +37,7 @@ def main(args):
         cobb_detector = CobbAngleDetector(orig_image=orig_image,
                                           binary_mask=binary_mask,
                                           n_segments=20,
-                                          order=8,
+                                          order=6, # Optimal한 값 (Optimization 횟수 5 + 1)
                                           deg=7,
                                           expr=args.expr)
         
@@ -49,15 +49,16 @@ def main(args):
             work_time = time.time() - start_time
             
             errors_li.append(cobb_error)
-            print(f"\r{int(work_time)//60}m{int(work_time)%60}s Sample[{sample_cnt:03d}] is processing... {cobb_error}", end='')
             
+            print(f"[{int(work_time)//60:02d}m{int(work_time)%60:02d}s] Sample[{sample_cnt:03d}] is ", end="")
+            print(cobb_error)
         except:
             print(f"\nError @ {orig_path}")
-        
     
     print()
     print(f"Test sample count: {sample_cnt:03d}")
     
+    print(errors_li)
     errors_li = np.array(errors_li)
     errors_mean = np.mean(errors_li, axis=0)
     

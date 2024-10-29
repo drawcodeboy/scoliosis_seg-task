@@ -1,15 +1,14 @@
 import time
 import argparse
-from dataloader import dataset
+from dataloader import load_dataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 
-from engine import *
 from utils import *
 
-from models.nets import SegFormer
-from models.loss_fn import get_loss_fn
+from models.nets import load_model
+from models.loss_fn import load_loss_fn
 
 def get_args_parser():
     parser = argparse.ArgumentParser(add_help=False)
@@ -23,11 +22,12 @@ def get_args_parser():
     parser.add_argument("--data_dir", default='data/AIS.v1i.yolov8')
     
     # Model
+    parser.add_argument("--model", default='segformer')
     parser.add_argument("--scale", default='B0', help="MiT Scale of SegFormer")
     parser.add_argument("--num-classes", type=int, default=1, help="Num of Classes without Background")
     
     # Loss function
-    parser.add_argument("--unified-loss-fn", action='store_true')
+    parser.add_argument("--loss-fn", default='dice')
     
     # Hyperparameters
     parser.add_argument("--lr", type=float, default=1e-4)
@@ -49,7 +49,7 @@ def print_info(device, args):
     print(f"epochs : {args.epochs}")
     print(f"lr : {args.lr}")
     print(f"batch size : {args.batch_size}")
-    print(f"unified loss function : {args.unified_loss_fn}")
+    print(f"loss function : {args.loss_fn}")
     print("######################")
 
 def main(args):
@@ -60,17 +60,17 @@ def main(args):
     print_info(device, args)
     
     # Dataset
-    train_ds = dataset(dataset='scoliosis', data_dir=args.data_dir, mode=args.mode)
-    val_ds = dataset(dataset='scoliosis', data_dir=args.data_dir, mode=args.val_mode)
+    train_ds = load_dataset(dataset='scoliosis', data_dir=args.data_dir, mode=args.mode)
+    val_ds = load_dataset(dataset='scoliosis', data_dir=args.data_dir, mode=args.val_mode)
     
     train_dl = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True)
     val_dl = DataLoader(val_ds, batch_size=args.batch_size)
     
     # Model
-    model = SegFormer(num_classes=args.num_classes, phi=args.scale.lower()).to(device)
+    model = load_model(model_name=args.model, scale=args.scale.lower(), num_classes=args.num_classes).to(device)
     
     # Loss function
-    loss_fn = get_loss_fn(imbalance=args.unified_loss_fn)
+    loss_fn = load_loss_fn(loss_fn=args.loss_fn)
     
     # Optimizer
     p = [p for p in model.parameters() if p.requires_grad]
@@ -111,12 +111,11 @@ def main(args):
         # Save Model (Minimum Validation Loss)
         if val_loss < min_val_loss:
             min_val_loss = val_loss
-            save_model_ckpt(model, args.scale.upper(), current_epoch, args.save_weights_dir, args.unified_loss_fn)
+            save_model_ckpt(model, args.scale.upper(), current_epoch, args.save_weights_dir, args.loss_fn)
         
         total_train_loss.append(train_loss)
         total_val_loss.append(val_loss)
-    
-    save_loss_ckpt(total_train_loss, total_val_loss, args.save_train_loss_dir, args.save_val_loss_dir, args.unified_loss_fn)
+        save_loss_ckpt(total_train_loss, total_val_loss, args.save_train_loss_dir, args.save_val_loss_dir, args.loss_fn)
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Training SegFormer', parents=[get_args_parser()])

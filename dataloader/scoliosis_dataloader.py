@@ -8,6 +8,12 @@ import os
 
 class ScoliosisDataset(Dataset):
     def __init__(self, data_dir, mode='train', model='Mask R-CNN'):
+        '''
+            [Args]
+                - model
+                    - U-Net: Image와 Binary Mask를 리턴
+                    - Mask R-CNN: Image, Bounding Box, Binary Mask를 리턴
+        '''
         self.data_dir = data_dir
         self.mode = mode
         self.data_li = [] # {image_path, label_path}
@@ -91,6 +97,7 @@ class ScoliosisDataset(Dataset):
         file_cnt = 0
         
         for i, filename in enumerate(os.listdir(images_path)):
+            # if i == 1: break # for debugging
             image_path = os.path.join(images_path, filename)
             label_path = os.path.join(labels_path, f"{filename[:-4]}.txt")
             

@@ -83,7 +83,7 @@ class SegFormerHead(nn.Module):
         return x
 
 class SegFormer(nn.Module):
-    def __init__(self, num_classes = 21, phi = 'b0', pretrained = False):
+    def __init__(self, num_classes = 21, phi = 'b0', pretrained = False, in_chans=3):
         super(SegFormer, self).__init__()
         self.in_channels = {
             'b0': [32, 64, 160, 256], 'b1': [64, 128, 320, 512], 'b2': [64, 128, 320, 512],
@@ -92,13 +92,13 @@ class SegFormer(nn.Module):
         self.backbone   = {
             'b0': mit_b0, 'b1': mit_b1, 'b2': mit_b2,
             'b3': mit_b3, 'b4': mit_b4, 'b5': mit_b5,
-        }[phi](pretrained)
+        }[phi](pretrained=pretrained, in_chans=in_chans)
         self.embedding_dim   = {
             'b0': 256, 'b1': 256, 'b2': 768,
             'b3': 768, 'b4': 768, 'b5': 768,
         }[phi]
         self.decode_head = SegFormerHead(num_classes, self.in_channels, self.embedding_dim)
-        self.acti = nn.Sigmoid()
+        self.acti = nn.Sigmoid() # 내가 추가한 부분
 
     def forward(self, inputs):
         H, W = inputs.size(2), inputs.size(3)
@@ -108,5 +108,5 @@ class SegFormer(nn.Module):
         
         x = F.interpolate(x, size=(H, W), mode='bilinear', align_corners=True)
         
-        x = self.acti(x)
+        x = self.acti(x) # 내가 추가한 부분
         return x

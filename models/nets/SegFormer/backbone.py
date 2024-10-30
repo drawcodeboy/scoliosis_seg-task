@@ -445,100 +445,108 @@ class MixVisionTransformer(nn.Module):
         #   block1
         #----------------------------------#
         x, H, W = self.patch_embed1.forward(x)
+        # print(f"Block 1 Patch Embedding Shape: {x.shape}")
         for i, blk in enumerate(self.block1):
             x = blk.forward(x, H, W)
         x = self.norm1(x)
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
         outs.append(x)
+        # print(f"Feature Map(After Block 1) Shape: {x.shape}")
 
         #----------------------------------#
         #   block2
         #----------------------------------#
         x, H, W = self.patch_embed2.forward(x)
+        # print(f"Block 2 Patch Embedding Shape: {x.shape}")
         for i, blk in enumerate(self.block2):
             x = blk.forward(x, H, W)
         x = self.norm2(x)
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
         outs.append(x)
+        # print(f"Feature Map(After Block 2) Shape: {x.shape}")
 
         #----------------------------------#
         #   block3
         #----------------------------------#
         x, H, W = self.patch_embed3.forward(x)
+        # print(f"Block 3 Patch Embedding Shape: {x.shape}")
         for i, blk in enumerate(self.block3):
             x = blk.forward(x, H, W)
         x = self.norm3(x)
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
         outs.append(x)
+        # print(f"Feature Map(After Block 3) Shape: {x.shape}")
 
         #----------------------------------#
         #   block4
         #----------------------------------#
         x, H, W = self.patch_embed4.forward(x)
+        # print(f"Block 4 Patch Embedding Shape: {x.shape}")
         for i, blk in enumerate(self.block4):
             x = blk.forward(x, H, W)
         x = self.norm4(x)
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
         outs.append(x)
+        # print(f"Feature Map(After Block 4) Shape: {x.shape}")
 
         return outs
 
 class mit_b0(MixVisionTransformer):
-    def __init__(self, pretrained = False):
+    def __init__(self, pretrained = False, in_chans = 3):
         super(mit_b0, self).__init__(
             embed_dims=[32, 64, 160, 256], num_heads=[1, 2, 5, 8], mlp_ratios=[4, 4, 4, 4],
             qkv_bias=True, norm_layer=partial(nn.LayerNorm, eps=1e-6), depths=[2, 2, 2, 2], sr_ratios=[8, 4, 2, 1],
-            drop_rate=0.0, drop_path_rate=0.1)
+            drop_rate=0.0, drop_path_rate=0.1, in_chans=in_chans)
         if pretrained:
             print("Load backbone weights")
             self.load_state_dict(torch.load("model_data/segformer_b0_backbone_weights.pth"), strict=False)
 
 class mit_b1(MixVisionTransformer):
-    def __init__(self, pretrained = False):
+    def __init__(self, pretrained = False, in_chans = 3):
         super(mit_b1, self).__init__(
             embed_dims=[64, 128, 320, 512], num_heads=[1, 2, 5, 8], mlp_ratios=[4, 4, 4, 4],
             qkv_bias=True, norm_layer=partial(nn.LayerNorm, eps=1e-6), depths=[2, 2, 2, 2], sr_ratios=[8, 4, 2, 1],
-            drop_rate=0.0, drop_path_rate=0.1)
+            drop_rate=0.0, drop_path_rate=0.1, in_chans=in_chans)
         if pretrained:
             print("Load backbone weights")
             self.load_state_dict(torch.load("model_data/segformer_b1_backbone_weights.pth"), strict=False)
 
 class mit_b2(MixVisionTransformer):
-    def __init__(self, pretrained = False):
+    def __init__(self, pretrained = False, in_chans = 3):
         super(mit_b2, self).__init__(
             embed_dims=[64, 128, 320, 512], num_heads=[1, 2, 5, 8], mlp_ratios=[4, 4, 4, 4],
             qkv_bias=True, norm_layer=partial(nn.LayerNorm, eps=1e-6), depths=[3, 4, 6, 3], sr_ratios=[8, 4, 2, 1],
-            drop_rate=0.0, drop_path_rate=0.1)
+            drop_rate=0.0, drop_path_rate=0.1, in_chans=in_chans)
         if pretrained:
             print("Load backbone weights")
             self.load_state_dict(torch.load("model_data/segformer_b2_backbone_weights.pth"), strict=False)
 
 class mit_b3(MixVisionTransformer):
-    def __init__(self, pretrained = False):
+    def __init__(self, pretrained = False, in_chans = 3):
         super(mit_b3, self).__init__(
             embed_dims=[64, 128, 320, 512], num_heads=[1, 2, 5, 8], mlp_ratios=[4, 4, 4, 4],
             qkv_bias=True, norm_layer=partial(nn.LayerNorm, eps=1e-6), depths=[3, 4, 18, 3], sr_ratios=[8, 4, 2, 1],
-            drop_rate=0.0, drop_path_rate=0.1)
+            drop_rate=0.0, drop_path_rate=0.1, in_chans=in_chans)
         if pretrained:
             print("Load backbone weights")
             self.load_state_dict(torch.load("model_data/segformer_b3_backbone_weights.pth"), strict=False)
 
 class mit_b4(MixVisionTransformer):
-    def __init__(self, pretrained = False):
+    def __init__(self, pretrained = False, in_chans = 3):
         super(mit_b4, self).__init__(
             embed_dims=[64, 128, 320, 512], num_heads=[1, 2, 5, 8], mlp_ratios=[4, 4, 4, 4],
             qkv_bias=True, norm_layer=partial(nn.LayerNorm, eps=1e-6), depths=[3, 8, 27, 3], sr_ratios=[8, 4, 2, 1],
-            drop_rate=0.0, drop_path_rate=0.1)
+            drop_rate=0.0, drop_path_rate=0.1, in_chans=in_chans)
         if pretrained:
             print("Load backbone weights")
             self.load_state_dict(torch.load("model_data/segformer_b4_backbone_weights.pth"), strict=False)
 
 class mit_b5(MixVisionTransformer):
-    def __init__(self, pretrained = False):
+    def __init__(self, pretrained = False, in_chans = 3):
         super(mit_b5, self).__init__(
             embed_dims=[64, 128, 320, 512], num_heads=[1, 2, 5, 8], mlp_ratios=[4, 4, 4, 4],
             qkv_bias=True, norm_layer=partial(nn.LayerNorm, eps=1e-6), depths=[3, 6, 40, 3], sr_ratios=[8, 4, 2, 1],
-            drop_rate=0.0, drop_path_rate=0.1)
+            drop_rate=0.0, drop_path_rate=0.1, in_chans=in_chans)
         if pretrained:
             print("Load backbone weights")
             self.load_state_dict(torch.load("model_data/segformer_b5_backbone_weights.pth"), strict=False)

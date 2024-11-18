@@ -1,0 +1,4 @@
+1. run container
+2. pip install -r requirements.txt
+3. apt-get update
+4. (Optional) apt-get install git

@@ -4,6 +4,7 @@ from dataloader import load_dataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+from torch import nn
 
 from utils import *
 
@@ -70,6 +71,9 @@ def main(args):
     model_scale = args.model.split('-')[1].lower()
     model = load_model(model_name=model_name, scale=model_scale, num_classes=args.num_classes).to(device)
     
+    # Distirbuted
+    # model = nn.DataParallel(model)
+    
     # Loss function
     loss_fn = load_loss_fn(loss_fn=args.loss_fn)
     
@@ -91,6 +95,7 @@ def main(args):
     # Check minimum validation loss for ckpt
     min_val_loss = 1000.
     
+    total_train_start_time = time.time()
     # Train
     for current_epoch in range(0, args.epochs):
         current_epoch += 1
@@ -117,6 +122,9 @@ def main(args):
         total_train_loss.append(train_loss)
         total_val_loss.append(val_loss)
         save_loss_ckpt(total_train_loss, total_val_loss, args.save_train_loss_dir, args.save_val_loss_dir, args.model)
+    
+    total_train_time = int(time.time() - total_train_start_time)
+    print(f"Total Training Time: {total_train_time//60:02d}m {total_train_time%60:02d}s")
     
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Training Segmentation Algorithm', parents=[get_args_parser()])

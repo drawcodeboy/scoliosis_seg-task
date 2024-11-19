@@ -1,6 +1,9 @@
 import torch
 from .metrics import get_metrics
 
+import cv2
+import numpy as np
+
 def train_one_epoch(epoch, model, dataloader, optimizer, scheduler, loss_fn, device):
     model.train()
     
@@ -11,11 +14,16 @@ def train_one_epoch(epoch, model, dataloader, optimizer, scheduler, loss_fn, dev
         images, targets = images.to(device), targets.to(device)
         
         outputs = model(images)
-        
+            
         loss = loss_fn(outputs, targets)
         
         loss.backward()
         optimizer.step()
+        
+        # output = outputs[0].cpu().detach().permute(1, 2, 0).numpy()
+        # output = (output * 255.).astype(np.uint8)
+        # cv2.imwrite('./test.jpg', output)
+        
         
         total_loss += loss
         print(f"\rTraining: {100*batch_idx/len(dataloader):.2f}%, Loss: {loss.item():.6f}, LR: {scheduler.get_last_lr()[0]:.8f}", end="")
@@ -42,6 +50,10 @@ def evaluate(epoch, model, dataloader, loss_fn, scheduler, device):
         outputs = model(images)
         
         loss = loss_fn(outputs, targets)
+        
+        # output = outputs[0].cpu().detach().permute(1, 2, 0).numpy()
+        # output = (output * 255.).astype(np.uint8)
+        # cv2.imwrite('./test.jpg', output)
         
         metrics_dict = get_metrics(outputs, targets, metrics_li)
         for key in metrics_li:

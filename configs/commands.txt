@@ -11,7 +11,7 @@ python inference.py --vis-method=2 --image-path="E:\Scoliosis-Segmentation\SegFo
 python inference.py --vis-method=2 --image-path="E:\Scoliosis-Segmentation\SegFormer\data\AIS.v1i.yolov8\test\images\1094_bmp.rf.3701d6f19cbf950811dd8e2ad8646d39.jpg"
 
 # train.py (check operation)
-python train.py --batch-size=4 --epochs=1
+python train.py --use-cuda --model=SegFormer-B0
 
 # test.py (check operation)
-python test.py --batch-size=2 --load-weights=SegFormer-B0-001-dice_loss.pth
+python test.py --use-cuda --load-weights=SegFormer-B0-075.pth

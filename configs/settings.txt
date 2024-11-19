@@ -1,0 +1,4 @@
+1. build image & run container
+
+[Optional]
+1. apt-get install git

@@ -22,8 +22,7 @@ def get_args_parser():
     parser.add_argument("--data_dir", default='data/AIS.v1i.yolov8')
     
     # Model
-    parser.add_argument("--model", default='segformer')
-    parser.add_argument("--scale", default='B0', help="MiT Scale of SegFormer")
+    parser.add_argument("--model", default='SegFormer-B0')
     parser.add_argument("--num-classes", type=int, default=1, help="Num of Classes without Background")
     
     # Loss function
@@ -59,7 +58,9 @@ def main(args):
     test_dl = DataLoader(test_ds, batch_size=args.batch_size)
     
     # Model
-    model = load_model(model_name=args.model, scale=args.scale.lower(), num_classes=args.num_classes).to(device)
+    model_name = args.model.split('-')[0].lower()
+    model_scale = args.model.split('-')[1].lower()
+    model = load_model(model_name=model_name, scale=model_scale, num_classes=args.num_classes).to(device)
     ckpt = torch.load(os.path.join(args.load_weights_dir, args.load_weights), map_location=device, weights_only=False)
     model.load_state_dict(ckpt['model'])
     print(f"It was trained {ckpt['epochs']} EPOCHS")

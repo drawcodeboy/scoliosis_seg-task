@@ -22,8 +22,7 @@ def get_args_parser():
     parser.add_argument("--data_dir", default='data/AIS.v1i.yolov8')
     
     # Model
-    parser.add_argument("--model", default='segformer')
-    parser.add_argument("--scale", default='B0', help="MiT Scale of SegFormer")
+    parser.add_argument("--model", default='SegFormer-B0')
     parser.add_argument("--num-classes", type=int, default=1, help="Num of Classes without Background")
     
     # Loss function
@@ -32,7 +31,7 @@ def get_args_parser():
     # Hyperparameters
     parser.add_argument("--lr", type=float, default=1e-4)
     parser.add_argument("--epochs", type=int, default=100)
-    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--batch-size", type=int, default=16)
     
     # Save Model Weights & Losses Dir
     parser.add_argument("--save_weights_dir", default="saved/weights")
@@ -67,7 +66,9 @@ def main(args):
     val_dl = DataLoader(val_ds, batch_size=args.batch_size)
     
     # Model
-    model = load_model(model_name=args.model, scale=args.scale.lower(), num_classes=args.num_classes).to(device)
+    model_name = args.model.split('-')[0].lower()
+    model_scale = args.model.split('-')[1].lower()
+    model = load_model(model_name=model_name, scale=model_scale, num_classes=args.num_classes).to(device)
     
     # Loss function
     loss_fn = load_loss_fn(loss_fn=args.loss_fn)
@@ -111,14 +112,14 @@ def main(args):
         # Save Model (Minimum Validation Loss)
         if val_loss < min_val_loss:
             min_val_loss = val_loss
-            save_model_ckpt(model, args.scale.upper(), current_epoch, args.save_weights_dir, args.loss_fn)
+            save_model_ckpt(model, args.model, current_epoch, args.save_weights_dir)
         
         total_train_loss.append(train_loss)
         total_val_loss.append(val_loss)
-        save_loss_ckpt(total_train_loss, total_val_loss, args.save_train_loss_dir, args.save_val_loss_dir, args.loss_fn)
+        save_loss_ckpt(total_train_loss, total_val_loss, args.save_train_loss_dir, args.save_val_loss_dir, args.model)
     
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser('Training SegFormer', parents=[get_args_parser()])
+    parser = argparse.ArgumentParser('Training Segmentation Algorithm', parents=[get_args_parser()])
     
     args = parser.parse_args()
     main(args)

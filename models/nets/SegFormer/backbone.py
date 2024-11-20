@@ -446,49 +446,49 @@ class MixVisionTransformer(nn.Module):
         #   block1
         #----------------------------------#
         x, H, W = self.patch_embed1.forward(x)
-        print(f"Block 1 Patch Embedding Shape: {x.shape}")
+        # print(f"Block 1 Patch Embedding Shape: {x.shape}")
         for i, blk in enumerate(self.block1):
             x = blk.forward(x, H, W)
         x = self.norm1(x)
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
         outs.append(x)
-        print(f"Feature Map(After Block 1) Shape: {x.shape}")
+        # print(f"Feature Map(After Block 1) Shape: {x.shape}")
 
         #----------------------------------#
         #   block2
         #----------------------------------#
         x, H, W = self.patch_embed2.forward(x)
-        print(f"Block 2 Patch Embedding Shape: {x.shape}")
+        # print(f"Block 2 Patch Embedding Shape: {x.shape}")
         for i, blk in enumerate(self.block2):
             x = blk.forward(x, H, W)
         x = self.norm2(x)
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
         outs.append(x)
-        print(f"Feature Map(After Block 2) Shape: {x.shape}")
+        # print(f"Feature Map(After Block 2) Shape: {x.shape}")
 
         #----------------------------------#
         #   block3
         #----------------------------------#
         x, H, W = self.patch_embed3.forward(x)
-        print(f"Block 3 Patch Embedding Shape: {x.shape}")
+        # print(f"Block 3 Patch Embedding Shape: {x.shape}")
         for i, blk in enumerate(self.block3):
             x = blk.forward(x, H, W)
         x = self.norm3(x)
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
         outs.append(x)
-        print(f"Feature Map(After Block 3) Shape: {x.shape}")
+        # print(f"Feature Map(After Block 3) Shape: {x.shape}")
 
         #----------------------------------#
         #   block4
         #----------------------------------#
         x, H, W = self.patch_embed4.forward(x)
-        print(f"Block 4 Patch Embedding Shape: {x.shape}")
+        # print(f"Block 4 Patch Embedding Shape: {x.shape}")
         for i, blk in enumerate(self.block4):
             x = blk.forward(x, H, W)
         x = self.norm4(x)
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
         outs.append(x)
-        print(f"Feature Map(After Block 4) Shape: {x.shape}")
+        # print(f"Feature Map(After Block 4) Shape: {x.shape}")
 
         return outs
 

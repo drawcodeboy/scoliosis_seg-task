@@ -19,6 +19,7 @@ class HamDecoder(nn.Module):
 
         ham_channels = config['ham_channels']
 
+        # squeeze는 논문에서 head 이전 concat 역핳을 하는 듯 함.
         self.squeeze = ConvRelu(sum(enc_embed_dims[1:]), ham_channels)
         self.ham_attn = HamBurger(ham_channels, config)
         
@@ -30,7 +31,9 @@ class HamDecoder(nn.Module):
         print(f"ham_attn: {round(p_num/1000000, 1)}M")
         '''
         
-        self.align = ConvRelu(ham_channels, outChannels)
+        # self.align = ConvRelu(ham_channels, outChannels) # 내가 주석한 부분
+        # MLP인데, ReLU를 쓸 필요는 없어 보임.
+        self.align = nn.Conv2d(ham_channels, outChannels, kernel_size=1)
        
     def forward(self, features):
         
@@ -40,7 +43,7 @@ class HamDecoder(nn.Module):
 
         x = self.squeeze(x)
         x = self.ham_attn(x)
-        x = self.align(x)       
+        x = self.align(x)
 
         return x
 

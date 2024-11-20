@@ -43,7 +43,7 @@ lr_schedule: 'cos'
 epochs: 250 
 warmup_epochs: 3
 # one of 'batch_norm' or 'sync_bn' or 'layer_norm'
-norm_typ: 'batch_norm' # 이게 문제였음. sync_bn이었는데, 이건 model.eval()하면 output 다 0됨. 
+norm_typ: 'batch_norm' # It evoked problem. when norm_typ was 'sync_bn' and model.eval(), All outputs got Zero values
 BN_MOM: 0.9
 SyncBN_MOM: 3e-4
 # Hamburger Parameters

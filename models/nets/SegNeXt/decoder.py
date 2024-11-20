@@ -21,6 +21,15 @@ class HamDecoder(nn.Module):
 
         self.squeeze = ConvRelu(sum(enc_embed_dims[1:]), ham_channels)
         self.ham_attn = HamBurger(ham_channels, config)
+        
+        # Check parameters
+        '''
+        p_num = 0
+        for name, p in self.ham_attn.named_parameters():
+            p_num += p.numel()
+        print(f"ham_attn: {round(p_num/1000000, 1)}M")
+        '''
+        
         self.align = ConvRelu(ham_channels, outChannels)
        
     def forward(self, features):

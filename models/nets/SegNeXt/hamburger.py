@@ -196,7 +196,7 @@ Make Burger
 class HamBurger(nn.Module):
     def __init__(self, inChannels, config):
         super().__init__()
-        self.put_cheese = config['put_cheese']
+        self.put_cheese = config["put_cheese"]
         C = config["MD_D"]
 
         # add Relu at end as NMF works of non-negative only
@@ -204,7 +204,16 @@ class HamBurger(nn.Module):
                                          nn.ReLU(inplace=True)
                                         )
         self.ham = NMF2D(config)
-        self.cheese = ConvBNRelu(C, C)
+        '''
+        self.cheese = ConvBNRelu(C, C) # Paper에는 Cheese가 없는데?
+        
+        p_num = 0
+        for name, p in self.cheese.named_parameters():
+            p_num += p.numel()
+        
+        print(f"self.cheese: {round(p_num/1000000, 1)}M")
+        '''
+        
         self.upper_bread = nn.Conv2d(C, inChannels, 1, bias=False)
 
     #     self.init_weights()
@@ -222,8 +231,11 @@ class HamBurger(nn.Module):
         x = self.lower_bread(x)
         x = self.ham(x)
 
+        '''
+        # In paper, No CHEESE!
         if self.put_cheese:
             x = self.cheese(x)
+        '''
         
         x = self.upper_bread(x)
         x = F.relu(x + skip, inplace=True)

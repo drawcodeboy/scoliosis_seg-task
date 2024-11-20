@@ -4,6 +4,9 @@ RUN apt-get update
 # OpenCV를 위한 베이스(?) 라이브러리
 RUN apt-get install -y libgl1 && apt-get install -y libglib2.0-0 
 
+RUN apt-get update
+RUN apt-get install -y git
+
 # 현재 경로에 있는 requirements.txt를 이미지 내 작업 디렉터리(workspace)에 복사
 COPY requirements.txt /workspace/requirements.txt
 

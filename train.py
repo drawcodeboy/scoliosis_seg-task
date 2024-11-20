@@ -1,5 +1,7 @@
 import time
 import argparse
+import os, sys
+
 from dataloader import load_dataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam
@@ -15,6 +17,7 @@ def get_args_parser():
     parser = argparse.ArgumentParser(add_help=False)
     # GPU
     parser.add_argument("--use-cuda", action='store_true')
+    parser.add_argument("--dist", action='store_true')
     
     # Dataset
     parser.add_argument("--dataset", default='scoliosis')
@@ -71,8 +74,20 @@ def main(args):
     model_scale = args.model.split('-')[1].lower()
     model = load_model(model_name=model_name, scale=model_scale, num_classes=args.num_classes).to(device)
     
-    # Distirbuted
-    # model = nn.DataParallel(model)
+    if args.dist == True:
+        '''
+        os.environ['MASTER_ADDR'] = 'localhost'
+        os.environ['MASTER_PORT'] = '12355'
+        torch.distributed.init_process_group(backend='ncll', 
+                                             world_size=2, 
+                                             rank=0,)
+        print(torch.distributed.get_rank())
+        
+        model = nn.parallel.DistributedDataParallel(model)
+        torch.distributed.destroy_process_group()
+        '''
+        # model = nn.parallel.DistributedDataParallel(model)
+        model = nn.DataParallel(model, device_ids=[0, 1], output_device=0)
     
     # Loss function
     loss_fn = load_loss_fn(loss_fn=args.loss_fn)

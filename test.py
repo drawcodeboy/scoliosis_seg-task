@@ -8,6 +8,7 @@ from models.nets import load_model
 from models.loss_fn import load_loss_fn
 
 from torch.utils.data import DataLoader
+from torch import nn
 
 from utils import *
 
@@ -15,6 +16,7 @@ def get_args_parser():
     parser = argparse.ArgumentParser(add_help=False)
     # GPU
     parser.add_argument("--use-cuda", action='store_true')
+    parser.add_argument("--dist", action='store_true')
     
     # Dataset
     parser.add_argument("--dataset", default='scoliosis')
@@ -61,8 +63,14 @@ def main(args):
     model_name = args.model.split('-')[0].lower()
     model_scale = args.model.split('-')[1].lower()
     model = load_model(model_name=model_name, scale=model_scale, num_classes=args.num_classes).to(device)
-    ckpt = torch.load(os.path.join(args.load_weights_dir, args.load_weights), map_location=device, weights_only=False)
+    
+        # Distributed Learning
+    if args.dist == True:
+        model = nn.DataParallel(model, device_ids=[0, 1], output_device=0)
+    
+    ckpt = torch.load(os.path.join(args.load_weights_dir, args.load_weights), map_location=device, weights_only=False)    
     model.load_state_dict(ckpt['model'])
+    
     print(f"It was trained {ckpt['epochs']} EPOCHS")
     
     # Loss function

@@ -17,8 +17,23 @@ parser.add_argument("--only", action='store_true')
 args = parser.parse_args()
 
 def window_ct (ct_scan, w_level=40, w_width=120):
-    w_min = w_level - w_width / 2
-    w_max = w_level + w_width / 2
+    '''
+    CT 스캔은 HU 값으로 표현되는데 HU 값의 정의는 다음과 같다.
+    HU 값의 정의:
+        HU는 물질의 밀도를 기준으로 정의되며, 물의 밀도를 0 HU로 기준화하고, 
+        공기는 -1000 HU, 뼈 등 고밀도 물질은 수백에서 수천 HU에 이르는 값을 가집니다.
+    일반적인 범위:
+        공기: 약 -1000 HU
+        지방: 약 -100 ~ -50 HU
+        물: 0 HU
+        연조직: 약 20 ~ 80 HU
+        뼈: 약 700 HU 이상 (일부 고밀도 뼈는 3000 HU 이상 가능)
+        금속 임플란트: 2000 HU 이상 (아주 높은 경우 4000 HU를 초과할 수도 있음)
+    이때, 특정 HU 범위를 강조시키기 위해서 윈도우 레벨, 윈도우 폭 개념이 사용된다.
+    아래의 경우 40이 중점이며, 범위는 120으로 [-20, 100] 범위의 HU 값을 강조시킨다.
+    '''
+    w_min = w_level - w_width / 2 # 최솟값
+    w_max = w_level + w_width / 2 # 최댓값
     num_slices=ct_scan.shape[2]
     for s in range(num_slices):
         slice_s = ct_scan[:,:,s]
@@ -64,8 +79,11 @@ for sNo in range(0+interval, numSubj+interval):
         #Loading the CT scan
         ct_dir_subj = Path(datasetDir,'ct_scans', "{0:0=3d}.nii".format(sNo))
         ct_scan_nifti = nib.load(str(ct_dir_subj))
-        ct_scan = ct_scan_nifti.get_fdata()
-        ct_scan = window_ct(ct_scan, window_specs[0], window_specs[1])
+        ct_scan = ct_scan_nifti.get_fdata() # -1024 ~ 3000 사이의 값으로 구성
+        # print(np.min(ct_scan), np.max(ct_scan))
+        ct_scan = window_ct(ct_scan, window_specs[0], window_specs[1]) # 0 ~ 255로 처리 및 근육 부분 강조
+        # print(np.min(ct_scan), np.max(ct_scan))
+        # sys.exit()
         
         #Loading the masks
         masks_dir_subj = Path(datasetDir,'masks', "{0:0=3d}.nii".format(sNo))

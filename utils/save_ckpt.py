@@ -37,16 +37,16 @@ def save_model_ckpt(model, model_name, current_epoch, dir):
         print(f"Can\'t Save Model @epoch: {current_epoch}")
 
 
-def save_loss_ckpt(train_loss, val_loss, train_dir, val_dir, model_name):
+def save_loss_ckpt(dataset, train_loss, val_loss, train_dir, val_dir, model_name):
     
     try:
-        np.save(os.path.join(train_dir, f'total_train_{model_name}.npy'), np.array(train_loss))
+        np.save(os.path.join(train_dir, f'{dataset}/total_train_{model_name}.npy'), np.array(train_loss))
         print('Save Train Loss')
     except:
         print('Can\'t Save Train Loss')
     
     try:
-        np.save(os.path.join(val_dir, f'total_val_{model_name}.npy'), np.array(val_loss))
+        np.save(os.path.join(val_dir, f'{dataset}/total_val_{model_name}.npy'), np.array(val_loss))
         print('Save Validation Loss')
     except:
         print('Can\'t Save Validation Loss')

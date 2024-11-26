@@ -11,7 +11,7 @@
 * T, S, B = batch-size 16
 * L = batch-size 8
 
-## Results
+## Scoliosis Results
 * SegFormer-B0
     * Params: 3.7M
     * GFLOPS: 13.1552G
@@ -82,3 +82,14 @@
     * Evaluate: 100.00%
     * IoU: 0.9005 | Dice: 0.9472 | Precision: 0.9460 | Recall: 0.9505 | loss: 0.052768
     * Test Time: 00m 07s
+## ICH_only Results
+SegFormer-B0
+It was trained 94 EPOCHS
+Evaluate: 100.00%
+IoU: 0.2318 | Dice: 0.3146 | Precision: 0.5834 | Recall: 0.2883 | loss: 0.714832
+Test Time: 00m 03s
+SegNeXt-T
+It was trained 53 EPOCHS
+Evaluate: 100.00%
+IoU: 0.3776 | Dice: 0.4830 | Precision: 0.5949 | Recall: 0.4852 | loss: 0.527711
+Test Time: 00m 03s

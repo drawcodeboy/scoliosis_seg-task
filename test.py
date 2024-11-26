@@ -21,7 +21,6 @@ def get_args_parser():
     # Dataset
     parser.add_argument("--dataset", default='scoliosis')
     parser.add_argument("--mode", default='test')
-    parser.add_argument("--data_dir", default='data/AIS.v1i.yolov8')
     
     # Model
     parser.add_argument("--model", default='SegFormer-B0')
@@ -56,7 +55,7 @@ def main(args):
     print_info(device, args)
     
     # Dataset
-    test_ds = load_dataset(dataset='scoliosis', data_dir=args.data_dir, mode=args.mode)
+    test_ds = load_dataset(dataset=args.dataset, mode=args.mode)
     test_dl = DataLoader(test_ds, batch_size=args.batch_size)
     
     # Model

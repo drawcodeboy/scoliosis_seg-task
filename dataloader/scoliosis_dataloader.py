@@ -7,7 +7,10 @@ import cv2
 import os
 
 class ScoliosisDataset(Dataset):
-    def __init__(self, data_dir, mode='train', model='Mask R-CNN'):
+    def __init__(self, 
+                 data_dir='data/AIS.v1i.yolov8', 
+                 mode='train', 
+                 model='Mask R-CNN'):
         '''
             [Args]
                 - model

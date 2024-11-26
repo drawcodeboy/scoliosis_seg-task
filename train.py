@@ -22,8 +22,6 @@ def get_args_parser():
     # Dataset
     parser.add_argument("--dataset", default='scoliosis')
     parser.add_argument("--mode", default='train')
-    parser.add_argument("--val_mode", default='valid')
-    parser.add_argument("--data_dir", default='data/AIS.v1i.yolov8')
     
     # Model
     parser.add_argument("--model", default='SegFormer-B0')
@@ -63,8 +61,8 @@ def main(args):
     print_info(device, args)
     
     # Dataset
-    train_ds = load_dataset(dataset='scoliosis', data_dir=args.data_dir, mode=args.mode)
-    val_ds = load_dataset(dataset='scoliosis', data_dir=args.data_dir, mode=args.val_mode)
+    train_ds = load_dataset(dataset=args.dataset, mode=args.mode)
+    val_ds = load_dataset(dataset=args.dataset, mode='val')
     
     train_dl = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True)
     val_dl = DataLoader(val_ds, batch_size=args.batch_size)
@@ -132,11 +130,11 @@ def main(args):
         # Save Model (Minimum Validation Loss)
         if val_loss < min_val_loss:
             min_val_loss = val_loss
-            save_model_ckpt(model, args.model, current_epoch, args.save_weights_dir)
+            save_model_ckpt(model, args.model, current_epoch, f"{args.save_weights_dir}/{args.dataset}")
         
         total_train_loss.append(train_loss)
         total_val_loss.append(val_loss)
-        save_loss_ckpt(total_train_loss, total_val_loss, args.save_train_loss_dir, args.save_val_loss_dir, args.model)
+        save_loss_ckpt(args.dataset, total_train_loss, total_val_loss, args.save_train_loss_dir, args.save_val_loss_dir, args.model)
     
     total_train_time = int(time.time() - total_train_start_time)
     print(f"Total Training Time: {total_train_time//60:02d}m {total_train_time%60:02d}s")

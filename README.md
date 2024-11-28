@@ -83,13 +83,30 @@
     * IoU: 0.9005 | Dice: 0.9472 | Precision: 0.9460 | Recall: 0.9505 | loss: 0.052768
     * Test Time: 00m 07s
 ## ICH_only Results
-SegFormer-B0
-It was trained 94 EPOCHS
-Evaluate: 100.00%
-IoU: 0.2318 | Dice: 0.3146 | Precision: 0.5834 | Recall: 0.2883 | loss: 0.714832
-Test Time: 00m 03s
-SegNeXt-T
-It was trained 53 EPOCHS
-Evaluate: 100.00%
-IoU: 0.3776 | Dice: 0.4830 | Precision: 0.5949 | Recall: 0.4852 | loss: 0.527711
-Test Time: 00m 03s
+* SegFormer-B0
+    * Params: 3.7M
+    * GFLOPS: 13.1552G
+    * It was trained 94 EPOCHS
+    * IoU: 0.2318 | Dice: 0.3146 | Precision: 0.5834 | Recall: 0.2883 | loss: 0.714832
+* SegNeXt-T
+    * Params: 4.8M
+    * GFLOPS: 16.5449G
+    * It was trained 53 EPOCHS
+    * IoU: 0.3829 | Dice: 0.4900 | Precision: 0.6060 | Recall: 0.4889 | loss: 0.522744
+* UNet-Base
+    * Params: 31.0M
+    * GFLOPS: 341.0395G
+    * It was trained 51 EPOCHS
+    * IoU: 0.3787 | Dice: 0.4816 | Precision: 0.4092 | Recall: 0.8859 | loss: 0.804174
+* SegFormer-B0 (Data Augmentation)
+    * It was trained 467 EPOCHS
+    * IoU: 0.0250 | Dice: 0.0473 | Precision: 0.0250 | Recall: 0.9317 | loss: 0.957689
+## ICH_all Results
+* 해당 방법론은 어려운 이유: 학습이 끝나면 SegFormer는 괜찮으나 SegNeXt는 모두 Negative라 판단하는 경향이 있다.
+* SegFormer-B0
+    * It was trained 51 EPOCHS
+    * IoU: 0.3809 | Dice: 0.3911 | Precision: 0.4172 | Recall: 0.9365 | loss: 0.951504
+* SegNeXt-T (??)
+    * It was trained 1 EPOCHS
+    * IoU: 0.8880 | Dice: 0.8880 | Precision: 1.0000 | Recall: 0.8880 | loss: 0.111111
+Test Time: 00m 09s

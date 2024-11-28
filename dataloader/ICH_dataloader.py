@@ -1,5 +1,7 @@
 from torch.utils.data import Dataset, DataLoader
 
+from .transform import ICHTransforms
+
 import torch
 from PIL import Image
 import numpy as np
@@ -9,7 +11,8 @@ import os
 class ICHDataset(Dataset):
     def __init__(self, 
                  data_dir='data/physionet.org/files/ct-ich/1.3.1/data_only', 
-                 mode='train'):
+                 mode='train',
+                 transforms=ICHTransforms):
         '''
             [Args]
                 - model
@@ -25,6 +28,8 @@ class ICHDataset(Dataset):
         
         self._check()
         self._split()
+        
+        self.transforms = transforms()
     
     def __len__(self):
         return len(self.data_li)
@@ -32,6 +37,10 @@ class ICHDataset(Dataset):
     def __getitem__(self, idx):
         image, height, width = self.get_image(self.data_li[idx]['image_path'])
         mask, _, __ = self.get_image(self.data_li[idx]['label_path'])
+        
+        if self.transforms is not None:
+            pass
+            # image, mask = self.transforms(image, mask, self.mode)
         
         # Image To Tensor
         image /= 255.0

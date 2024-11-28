@@ -64,12 +64,19 @@ def main(args):
     train_ds = load_dataset(dataset=args.dataset, mode=args.mode)
     val_ds = load_dataset(dataset=args.dataset, mode='val')
     
+    image, mask = train_ds[0]
+    image = (255. * image.permute(1, 2, 0)).detach().cpu().numpy().astype(np.uint8)
+    mask = (255. * mask.permute(1, 2, 0)).detach().cpu().numpy().astype(np.uint8)
+    cv2.imwrite("./temp_image.jpg", image)
+    cv2.imwrite("./temp_mask.jpg", mask)
+    
     train_dl = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True)
     val_dl = DataLoader(val_ds, batch_size=args.batch_size)
     
     # Model
     model_name = args.model.split('-')[0].lower()
     model_scale = args.model.split('-')[1].lower()
+        
     model = load_model(model_name=model_name, scale=model_scale, num_classes=args.num_classes).to(device)
     
     if args.dist == True:

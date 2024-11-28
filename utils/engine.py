@@ -3,6 +3,7 @@ from .metrics import get_metrics
 
 import cv2
 import numpy as np
+import sys
 
 def train_one_epoch(epoch, model, dataloader, optimizer, scheduler, loss_fn, device):
     model.train()
@@ -26,7 +27,7 @@ def train_one_epoch(epoch, model, dataloader, optimizer, scheduler, loss_fn, dev
         
         
         total_loss += loss
-        print(f"\rTraining: {100*batch_idx/len(dataloader):.2f}%, Loss: {loss.item():.6f}, LR: {scheduler.get_last_lr()[0]:.8f}", end="")
+        print(f"\rTraining: {100*batch_idx/len(dataloader):.2f}%, Loss: {total_loss/(batch_idx+1):.6f}, LR: {scheduler.get_last_lr()[0]:.8f}", end="")
     print()
         
     return (total_loss/len(dataloader)).detach().cpu().numpy() # One Epoch Mean Loss
@@ -50,10 +51,24 @@ def evaluate(epoch, model, dataloader, loss_fn, scheduler, device):
         outputs = model(images)
         
         loss = loss_fn(outputs, targets)
+                
+        '''
+        idx = 3
         
-        # output = outputs[0].cpu().detach().permute(1, 2, 0).numpy()
-        # output = (output * 255.).astype(np.uint8)
-        # cv2.imwrite('./test.jpg', output)
+        image = images[idx].cpu().detach().permute(1, 2, 0).numpy()
+        image = (image * 255.).astype(np.uint8)
+        cv2.imwrite('./test_image_.jpg', image) 
+        
+        output = outputs[idx].cpu().detach().permute(1, 2, 0).numpy()
+        output = (output * 255.).astype(np.uint8)
+        cv2.imwrite('./test_output.jpg', output)
+        
+        target = targets[idx].cpu().detach().permute(1, 2, 0).numpy()
+        target = (target * 255.).astype(np.uint8)
+        cv2.imwrite('./test_target.jpg', target)
+
+        sys.exit()
+        '''
         
         metrics_dict = get_metrics(outputs, targets, metrics_li)
         for key in metrics_li:
@@ -63,6 +78,7 @@ def evaluate(epoch, model, dataloader, loss_fn, scheduler, device):
         print(f"\rEvaluate: {100*batch_idx/len(dataloader):.2f}%", end='')
     print()
     
+    print("\t* ", end='')
     for key in metrics_li:
         metrics[key] = sum(metrics[key])/len(metrics[key])
         print(f"{key}: {metrics[key]:.4f}", end=" | ")

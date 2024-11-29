@@ -15,7 +15,7 @@ def train_one_epoch(epoch, model, dataloader, optimizer, scheduler, loss_fn, dev
         images, targets = images.to(device), targets.to(device)
         
         outputs = model(images)
-            
+        
         loss = loss_fn(outputs, targets)
         
         loss.backward()

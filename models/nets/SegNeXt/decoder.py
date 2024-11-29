@@ -43,6 +43,7 @@ class HamDecoder(nn.Module):
 
         x = self.squeeze(x)
         x = self.ham_attn(x)
+        # print(f"Ham Attn: {x.shape}")
         x = self.align(x)
 
         return x

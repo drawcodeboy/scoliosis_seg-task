@@ -15,14 +15,14 @@ class SegNeXt(nn.Module):
                  ffn_ratios=[4, 4, 4, 4], depths=[3, 3, 5, 2], num_stages=4,
                  dec_outChannels=256, config=config, dropout=0.0, drop_path=0.0):
         super().__init__()
-        self.cls_conv = nn.Sequential(nn.Dropout2d(p=0.1),
-                                      nn.Conv2d(dec_outChannels, num_classes, kernel_size=1))
+
         self.encoder = MSCANet(in_channnels=in_channnels, embed_dims=embed_dims,
                                ffn_ratios=ffn_ratios, depths=depths, num_stages=num_stages,
                                drop_path=drop_path)
         self.decoder = HamDecoder(
             outChannels=dec_outChannels, config=config, enc_embed_dims=embed_dims)
-        
+        self.cls_conv = nn.Sequential(nn.Dropout2d(p=0.1),
+                                    nn.Conv2d(dec_outChannels, num_classes, kernel_size=1))
         self.acti = nn.Sigmoid() # 내가 추가한 부분
         
         self.init_weights()
@@ -47,7 +47,6 @@ class SegNeXt(nn.Module):
         output = self.cls_conv(dec_out)  # here output will be B x C x H/8 x W/8
         output = F.interpolate(output, size=(H, W), mode='bilinear', align_corners=True) #now its same as input
         #  bilinear interpol was used originally
-        
         output = self.acti(output) #내가 추가한 부분
         return output
 

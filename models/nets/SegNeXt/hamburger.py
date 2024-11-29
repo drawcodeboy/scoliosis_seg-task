@@ -218,12 +218,17 @@ class HamBurger(nn.Module):
     #             nn.init.normal_(m.weight, std=math.sqrt(2.0/fan_out), mean=0)
 
     def forward(self, x):
+        # X is all same shape (e.g. (bz, 512, H, W))
         skip = x.clone()
 
-        x = self.lower_bread(x)
+        # print(f"before lower bread: {x.shape}")
+        x = self.lower_bread(x) # 1x1 Conv, No changes to channel(dim)
+        # print(f"after lower bread: {x.shape}")
         x = self.ham(x)
+        # print(f"after hamburger: {x.shape}")
         
         x = self.upper_bread(x)
+        # print(f"after upper bread: {x.shape}")
         x = F.relu(x + skip, inplace=True)
 
         return x

@@ -46,34 +46,3 @@ class HamDecoder(nn.Module):
         x = self.align(x)
 
         return x
-
-
-#%%
-
-# import torch.nn.functional as F
-
-# def resize(input,
-#            size=None,
-#            scale_factor=None,
-#            mode='nearest',
-#            align_corners=None,
-#            warning=True):
-
-#     return F.interpolate(input, size, scale_factor, mode, align_corners)
-
-# inputs = [resize(
-#         level,
-#         size=x[0].shape[2:],
-#         mode='bilinear',
-#         align_corners=False
-#     ) for level in x]
-
-# for i in range(4):
-#     print(x[i].shape)
-# for i in range(4):
-#     print(inputs[i].shape)
-
-
-
-# inputs = torch.cat(inputs, dim=1)
-# print(inputs.shape)

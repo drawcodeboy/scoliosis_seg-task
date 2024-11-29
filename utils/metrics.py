@@ -26,7 +26,6 @@ def base_metrics(outputs, targets):
 
 def get_metrics(outputs, targets, metrics):
     TP, FP, TN, FN = base_metrics(outputs, targets)
-    print(TP, FP, TN, FN)
     metrics_dict = {}
     TP = torch.where(TP == 0., 1e-6, TP)
     

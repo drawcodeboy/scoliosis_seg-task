@@ -46,19 +46,19 @@ class _MatrixDecomposition2DBase(nn.Module):
     def __init__(self, config):
         super().__init__()
 
-        self.spatial = config['SPATIAL']
+        self.spatial = True
 
-        self.S = config['MD_S']
-        self.D = config['MD_D']
-        self.R = config['MD_R']
+        self.S = 1
+        self.D = 512
+        self.R = 64
 
-        self.train_steps = config['TRAIN_STEPS']
-        self.eval_steps = config['EVAL_STEPS']
+        self.train_steps = 6
+        self.eval_steps = 6
 
-        self.inv_t = config['INV_T']
-        self.eta = config['Eta']
+        self.inv_t = 1
+        self.eta = 0.9
 
-        self.rand_init = config['RAND_INIT']
+        self.rand_init = False
         '''
         print(30*'=')
         print('spatial: ', self.spatial)
@@ -153,7 +153,9 @@ class NMF2D(_MatrixDecomposition2DBase):
         self.inv_t = 1
 
     def _build_bases(self, B, S, D, R):
-        
+        # if not self.training:
+             # 아래 bases 값이 계속 바뀌면, 성능 test에 있어 문제가 될 수 있음.
+        torch.manual_seed(42)
         bases = torch.rand((B*S, D, R)).to('cuda' if torch.cuda.is_available() else 'cpu')
         bases = F.normalize(bases, dim=1) # column wise normalization i.e HW dim
 
@@ -196,23 +198,13 @@ Make Burger
 class HamBurger(nn.Module):
     def __init__(self, inChannels, config):
         super().__init__()
-        self.put_cheese = config["put_cheese"]
-        C = config["MD_D"]
+        C = 512
 
         # add Relu at end as NMF works of non-negative only
         self.lower_bread = nn.Sequential(nn.Conv2d(inChannels, C, 1),
                                          nn.ReLU(inplace=True)
                                         )
         self.ham = NMF2D(config)
-        '''
-        self.cheese = ConvBNRelu(C, C) # Paper에는 Cheese가 없는데?
-        
-        p_num = 0
-        for name, p in self.cheese.named_parameters():
-            p_num += p.numel()
-        
-        print(f"self.cheese: {round(p_num/1000000, 1)}M")
-        '''
         
         self.upper_bread = nn.Conv2d(C, inChannels, 1, bias=False)
 
@@ -230,12 +222,6 @@ class HamBurger(nn.Module):
 
         x = self.lower_bread(x)
         x = self.ham(x)
-
-        '''
-        # In paper, No CHEESE!
-        if self.put_cheese:
-            x = self.cheese(x)
-        '''
         
         x = self.upper_bread(x)
         x = F.relu(x + skip, inplace=True)

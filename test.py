@@ -96,14 +96,13 @@ def main(args):
     test_ds = load_dataset(dataset=args.dataset, mode=args.mode)
     test_dl = DataLoader(test_ds, batch_size=args.batch_size)
     
-    image, mask = test_ds[0]
+    image, mask = test_ds[1]
     image, mask, masked_image = get_masked_image(image, mask)
-    '''
+    
     cv2.imwrite("./test_image.jpg", image)
     cv2.imwrite("./test_mask.jpg", mask)
     cv2.imwrite("./test_masked_image.jpg", masked_image)
-    sys.exit()
-    '''
+    # sys.exit()
     
     # Model
     model_name = args.model.split('-')[0].lower()

@@ -83,16 +83,27 @@
     * IoU: 0.9005 | Dice: 0.9472 | Precision: 0.9460 | Recall: 0.9505 | loss: 0.052768
     * Test Time: 00m 07s
 ## ICH_only Results
+### threshold = 0.5
 * SegFormer-B0
     * Params: 3.7M
     * GFLOPS: 13.1552G
-    * It was trained 94 EPOCHS
-    * IoU: 0.2318 | Dice: 0.3146 | Precision: 0.5834 | Recall: 0.2883 | loss: 0.714832
+    * It was trained 35 EPOCHS
+    * IoU: 0.0848 | Dice: 0.1427 | Precision: 0.0977 | Recall: 0.4498 | loss: 0.887513
 * SegNeXt-T
     * Params: 4.8M
     * GFLOPS: 16.5449G
     * It was trained 53 EPOCHS
-    * IoU: 0.3829 | Dice: 0.4900 | Precision: 0.6060 | Recall: 0.4889 | loss: 0.522744
+    * IoU: 0.3833 | Dice: 0.4889 | Precision: 0.6041 | Recall: 0.4822 | loss: 0.519992
+* SegNeXt-S
+    * Params: 14.6M
+    * GFLOPS: 31.7697G
+    * It was trained 30 EPOCHS
+    * IoU: 0.3950 | Dice: 0.5020 | Precision: 0.7385 | Recall: 0.4474 | loss: 0.551906
+* SegNeXt-B
+    * Params: 27.6M
+    * GFLOPS: 53.2278G
+    * It was trained 22 EPOCHS
+    * IoU: 0.3648 | Dice: 0.4579 | Precision: 0.7270 | Recall: 0.4020 | loss: 0.591055
 * UNet-Base
     * Params: 31.0M
     * GFLOPS: 341.0395G
@@ -101,6 +112,72 @@
 * SegFormer-B0 (Data Augmentation)
     * It was trained 467 EPOCHS
     * IoU: 0.0250 | Dice: 0.0473 | Precision: 0.0250 | Recall: 0.9317 | loss: 0.957689
+### threshold = 0.6
+* SegFormer-B0
+    * It was trained 35 EPOCHS
+    * IoU: 0.0850 | Dice: 0.1429 | Precision: 0.0994 | Recall: 0.4282 | loss: 0.887513
+* SegNeXt-T
+    * It was trained 53 EPOCHS
+    * IoU: 0.3830 | Dice: 0.4883 | Precision: 0.6068 | Recall: 0.4798 | loss: 0.519992
+* SegNeXt-S
+    * It was trained 30 EPOCHS
+    * IoU: 0.3945 | Dice: 0.5014 | Precision: 0.7435 | Recall: 0.4465 | loss: 0.551906
+* SegNeXt-B
+    * It was trained 22 EPOCHS
+    * IoU: 0.3643 | Dice: 0.4573 | Precision: 0.7277 | Recall: 0.4011 | loss: 0.591055
+* UNet-Base
+    * It was trained 51 EPOCHS
+    * IoU: 0.3916 | Dice: 0.4975 | Precision: 0.4250 | Recall: 0.8769 | loss: 0.804174
+### threshold = 0.7
+* SegFormer-B0
+    * It was trained 35 EPOCHS
+    * IoU: 0.0855 | Dice: 0.1433 | Precision: 0.1015 | Recall: 0.4073 | loss: 0.887513
+* SegNeXt-T
+    * It was trained 53 EPOCHS
+    * IoU: 0.3828 | Dice: 0.4878 | Precision: 0.6097 | Recall: 0.4773 | loss: 0.519992
+* SegNeXt-S
+    * It was trained 30 EPOCHS
+    * IoU: 0.3944 | Dice: 0.5011 | Precision: 0.7450 | Recall: 0.4456 | loss: 0.551906
+* SegNeXt-B
+    * It was trained 22 EPOCHS
+    * IoU: 0.3637 | Dice: 0.4566 | Precision: 0.7279 | Recall: 0.4002 | loss: 0.591055
+* UNet-Base
+    * It was trained 51 EPOCHS
+    * IoU: 0.4009 | Dice: 0.5085 | Precision: 0.4374 | Recall: 0.8683 | loss: 0.804174
+### threshold = 0.8
+* SegFormer-B0
+    * It was trained 35 EPOCHS
+    * IoU: 0.0858 | Dice: 0.1435 | Precision: 0.1040 | Recall: 0.3829 | loss: 0.887513
+* SegNeXt-T
+    * It was trained 53 EPOCHS
+    * IoU: 0.3821 | Dice: 0.4867 | Precision: 0.6134 | Recall: 0.4742 | loss: 0.519992
+* SegNeXt-S
+    * It was trained 30 EPOCHS
+    * IoU: 0.3934 | Dice: 0.5001 | Precision: 0.7455 | Recall: 0.4441 | loss: 0.551906
+* SegNeXt-B
+    * It was trained 22 EPOCHS
+    * IoU: 0.3632 | Dice: 0.4559 | Precision: 0.7287 | Recall: 0.3991 | loss: 0.591055
+Test Time: 00m 03s
+* UNet-Base
+    * It was trained 51 EPOCHS
+    * IoU: 0.4098 | Dice: 0.5188 | Precision: 0.4503 | Recall: 0.8577 | loss: 0.804174
+### threshold = 0.9
+* SegFormer-B0
+    * It was trained 35 EPOCHS
+    * IoU: 0.0865 | Dice: 0.1440 | Precision: 0.1085 | Recall: 0.3500 | loss: 0.887513
+* SegNeXt-T
+    * It was trained 53 EPOCHS
+    * IoU: 0.3815 | Dice: 0.4856 | Precision: 0.6180 | Recall: 0.4696 | loss: 0.519992
+* SegNeXt-S
+    * It was trained 30 EPOCHS
+    * IoU: 0.3926 | Dice: 0.4991 | Precision: 0.7469 | Recall: 0.4424 | loss: 0.551906
+* SegNeXt-B
+    * It was trained 22 EPOCHS
+    * IoU: 0.3620 | Dice: 0.4544 | Precision: 0.7290 | Recall: 0.3971 | loss: 0.591055
+Test Time: 00m 03s
+* UNet-Base
+    * It was trained 51 EPOCHS
+    * IoU: 0.4210 | Dice: 0.5315 | Precision: 0.4678 | Recall: 0.8406 | loss: 0.804174
 ## ICH_all Results
 * 해당 방법론은 어려운 이유: 학습이 끝나면 SegFormer는 괜찮으나 SegNeXt는 모두 Negative라 판단하는 경향이 있다.
 * SegFormer-B0
